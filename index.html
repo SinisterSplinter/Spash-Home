@@ -192,68 +192,6 @@
       color: var(--muted);
     }
 
-    .filters {
-      position: sticky;
-      top: calc(112px + env(safe-area-inset-top));
-      z-index: 8;
-      display: grid;
-      gap: 10px;
-      padding: 10px;
-      margin: -4px -4px 6px;
-      border: 1px solid #e6edf7;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(12px);
-    }
-
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-
-    label.field {
-      display: grid;
-      gap: 5px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 750;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    input,
-    select {
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--ink);
-      padding: 10px 12px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: rgba(37, 99, 235, 0.7);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.13);
-    }
-
-    .result-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .note {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.84rem;
-    }
 
     .device-section {
       display: grid;
@@ -303,15 +241,25 @@
 
     .device-extra { margin-top: 0; }
 
-    .no-results {
-      display: none;
-      padding: 14px;
-      border: 1px dashed var(--line);
-      border-radius: 14px;
-      color: var(--muted);
-      text-align: center;
-      background: #fff;
+    .room-device-group {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
     }
+
+    .device-tag {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 4px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+      background: #f8fafc;
+    }
+
 
     footer {
       margin-top: 16px;
@@ -322,10 +270,6 @@
 
     [hidden] { display: none !important; }
 
-    @media (min-width: 620px) {
-      .field-grid { grid-template-columns: 1.2fr 1fr 1fr; }
-      .filters { top: calc(118px + env(safe-area-inset-top)); }
-    }
 
     @media (prefers-color-scheme: dark) {
       :root {
@@ -339,13 +283,12 @@
         --shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
       }
 
-      header.hero,
-      .filters { background: rgba(15, 23, 42, 0.94); }
+      header.hero { background: rgba(15, 23, 42, 0.94); }
       .row-card { background: linear-gradient(180deg, #111827, #0f172a); border-color: #253047; }
-      input, select, .device-list, .device-card { background: #0f172a; border-color: #253047; color: var(--ink); }
+      .device-list, .device-card { background: #0f172a; border-color: #253047; color: var(--ink); }
+      .device-tag { background: #111827; border-color: #253047; }
       .top-actions a, .small-btn { background: #111827; border-color: #253047; }
       details.panel > summary::after { background: #1e293b; color: #cbd5e1; }
-      .no-results { background: #0f172a; }
     }
   </style>
 </head>
@@ -419,99 +362,110 @@
       <details class="panel" id="devices" open>
         <summary>All Device Names</summary>
         <div class="panel-body">
-          <section class="filters" aria-label="Device filters">
-            <div class="field-grid">
-              <label class="field">Search
-                <input id="deviceSearch" type="search" placeholder="Search device names…" autocomplete="off" />
-              </label>
-              <label class="field">Room
-                <select id="roomFilter">
-                  <option value="all">All rooms</option>
-                </select>
-              </label>
-              <label class="field">Device type
-                <select id="typeFilter">
-                  <option value="all">All device types</option>
-                </select>
-              </label>
+          <section class="room-device-group">
+            <h3 class="device-heading">Living Room</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Bottom Stairs</div></article>
+              <article class="device-card"><div class="device-name">Chair</div></article>
+              <article class="device-card"><div class="device-name">Couch</div></article>
+              <article class="device-card"><div class="device-name">End Table</div></article>
+              <article class="device-card"><div class="device-name">TV Light</div></article>
+              <article class="device-card"><div class="device-name">Living Room Speakers</div></article>
             </div>
-            <div class="result-line">
-              <span id="resultCount">Showing all devices</span>
-              <button class="small-btn primary" type="button" id="resetFilters">Reset</button>
-            </div>
-            <p class="note">Use filters to narrow the device list without changing the source names.</p>
           </section>
 
-          <section class="device-section" data-section="Lights">
-            <h2 class="device-heading">Lights</h2>
-
-            <h3 class="device-heading">Living Room:</h3>
-            <div class="device-list">
-              <article class="device-card" data-room="Living Room" data-type="Lights" data-search="Bottom Stairs Living Room Lights"><div class="device-name">Bottom Stairs</div></article>
-              <article class="device-card" data-room="Living Room" data-type="Lights" data-search="Chair Living Room Lights"><div class="device-name">Chair</div></article>
-              <article class="device-card" data-room="Living Room" data-type="Lights" data-search="Couch Living Room Lights"><div class="device-name">Couch</div></article>
-              <article class="device-card" data-room="Living Room" data-type="Lights" data-search="End Table Living Room Lights"><div class="device-name">End Table</div></article>
-              <article class="device-card" data-room="Living Room" data-type="Lights" data-search="TV Light Living Room Lights"><div class="device-name">TV Light</div></article>
-            </div>
-
+          <section class="room-device-group">
             <h3 class="device-heading">Dining Room &amp; Kitchen</h3>
             <div class="device-list">
-              <article class="device-card" data-room="Dining Room & Kitchen" data-type="Lights" data-search="Corner Lamp Dining Room Kitchen Lights"><div class="device-name">Corner Lamp</div></article>
-              <article class="device-card" data-room="Dining Room & Kitchen" data-type="Lights" data-search="Dining Table Dining Room Kitchen Lights"><div class="device-name">Dining Table</div></article>
-              <article class="device-card" data-room="Dining Room & Kitchen" data-type="Lights" data-search="Kitchen Dining Room Kitchen Lights"><div class="device-name">Kitchen</div></article>
-            </div>
-
-            <h3 class="device-heading">Bedroom:</h3>
-            <div class="device-list">
-              <article class="device-card" data-room="Bedroom" data-type="Lights" data-search="Bed Bedroom Lights"><div class="device-name">Bed</div></article>
-              <article class="device-card" data-room="Bedroom" data-type="Lights" data-search="Bedroom Lamp Bedroom Lights"><div class="device-name">Bedroom Lamp</div></article>
-            </div>
-
-            <h3 class="device-heading">Spare Room:</h3>
-            <div class="device-list">
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Desk Lamp Spare Room Lights"><div class="device-name">Desk Lamp</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Display Case Spare Room Lights"><div class="device-name">Display Case</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Display Wall Spare Room Lights"><div class="device-name">Display Wall</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Glow Spare Room Lights"><div class="device-name">Glow</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Wall Spare Room Lights"><div class="device-name">Wall</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Lights" data-search="Window Spare Room Lights"><div class="device-name">Window</div></article>
-            </div>
-
-            <h3 class="device-heading">Other:</h3>
-            <div class="device-list">
-              <article class="device-card" data-room="Other" data-type="Lights" data-search="Top Stairs Other Lights"><div class="device-name">Top Stairs</div></article>
+              <article class="device-card"><div class="device-name">Corner Lamp</div></article>
+              <article class="device-card"><div class="device-name">Dining Table</div></article>
+              <article class="device-card"><div class="device-name">Kitchen</div></article>
             </div>
           </section>
 
-          <section class="device-section" data-section="Appliances">
-            <h2 class="device-heading">Appliances</h2>
+          <section class="room-device-group">
+            <h3 class="device-heading">Bedroom</h3>
             <div class="device-list">
-              <article class="device-card" data-room="Bedroom" data-type="Appliances" data-search="Fan bedroom fan Appliances"><div class="device-name">Fan</div><div class="device-note">(bedroom fan)</div></article>
-              <article class="device-card" data-room="Front Door" data-type="Appliances" data-search="Front Door front door camera Appliances"><div class="device-name">Front Door</div><div class="device-note">(front door camera)</div></article>
-              <article class="device-card" data-room="2nd Floor" data-type="Appliances" data-search="Frumpkin 2nd floor vacuum Appliances"><div class="device-name">Frumpkin</div><div class="device-note">(2nd floor vacuum)</div></article>
-              <article class="device-card" data-room="Front Door" data-type="Appliances" data-search="Home Ring front doorbell Appliances"><div class="device-name">Home Ring</div><div class="device-note">(front doorbell)</div></article>
-              <article class="device-card" data-room="Smart Strip" data-type="Appliances" data-search="Plug 3 smart strip plug Appliances"><div class="device-name">Plug 3</div><div class="device-note">(smart strip plug)</div></article>
-              <article class="device-card" data-room="1st Floor" data-type="Appliances" data-search="Silver 1st floor vacuum Appliances"><div class="device-name">Silver</div><div class="device-note">(1st floor vacuum)</div></article>
-              <article class="device-card" data-room="Smart Strip" data-type="Appliances" data-search="Smart Strip plug x 4 Appliances"><div class="device-name">Smart Strip</div><div class="device-note">(plug x 4)</div></article>
-              <article class="device-card" data-room="Unspecified" data-type="Appliances" data-search="Spash TV Appliances"><div class="device-name">Spash TV</div></article>
-              <article class="device-card" data-room="Unspecified" data-type="Appliances" data-search="Thermostat Appliances"><div class="device-name">Thermostat</div></article>
-              <article class="device-card" data-room="Smart Strip" data-type="Appliances" data-search="USB Power smart strip USB ports Appliances"><div class="device-name">USB Power</div><div class="device-note">(smart strip USB ports)</div></article>
-              <article class="device-card" data-room="Spare Room" data-type="Appliances" data-search="Vent spare room vent fan Appliances"><div class="device-name">Vent</div><div class="device-note">(spare room vent fan)</div></article>
+              <article class="device-card"><div class="device-name">Bed</div></article>
+              <article class="device-card"><div class="device-name">Bedroom Lamp</div></article>
+              <article class="device-card"><div class="device-name">Bedroom Echo</div></article>
+              <article class="device-card"><div class="device-name">Fan</div><div class="device-tag">bedroom fan</div></article>
             </div>
           </section>
 
-          <section class="device-section" data-section="Alexa Echo Devices">
-            <h2 class="device-heading">Alexa Echo Devices</h2>
+          <section class="room-device-group">
+            <h3 class="device-heading">Spare Room</h3>
             <div class="device-list">
-              <article class="device-card" data-room="1st Floor" data-type="Alexa Echo Devices" data-search="1st Floor Echo Alexa Echo Devices"><div class="device-name">1st Floor Echo</div></article>
-              <article class="device-card" data-room="Bedroom" data-type="Alexa Echo Devices" data-search="Bedroom Echo Alexa Echo Devices"><div class="device-name">Bedroom Echo</div></article>
-              <article class="device-card" data-room="Living Room" data-type="Alexa Echo Devices" data-search="Living Room Speakers Alexa Echo Devices"><div class="device-name">Living Room Speakers</div></article>
-              <article class="device-card" data-room="Office" data-type="Alexa Echo Devices" data-search="Office Echo Dot Alexa Echo Devices"><div class="device-name">Office Echo Dot</div></article>
-              <article class="device-card" data-room="Shower" data-type="Alexa Echo Devices" data-search="Shower Speaker Alexa Echo Devices"><div class="device-name">Shower Speaker</div></article>
+              <article class="device-card"><div class="device-name">Desk Lamp</div></article>
+              <article class="device-card"><div class="device-name">Display Case</div></article>
+              <article class="device-card"><div class="device-name">Display Wall</div></article>
+              <article class="device-card"><div class="device-name">Glow</div></article>
+              <article class="device-card"><div class="device-name">Wall</div></article>
+              <article class="device-card"><div class="device-name">Window</div></article>
+              <article class="device-card"><div class="device-name">Vent</div><div class="device-tag">spare room vent fan</div></article>
             </div>
           </section>
 
-          <div class="no-results" id="noResults">No devices match those filters.</div>
+          <section class="room-device-group">
+            <h3 class="device-heading">Stairwell</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Top Stairs</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">Front Door</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Front Door</div><div class="device-tag">front door camera</div></article>
+              <article class="device-card"><div class="device-name">Home Ring</div><div class="device-tag">front doorbell</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">1st Floor</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Silver</div><div class="device-tag">1st floor vacuum</div></article>
+              <article class="device-card"><div class="device-name">1st Floor Echo</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">2nd Floor</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Frumpkin</div><div class="device-tag">2nd floor vacuum</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">Smart Strip</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Plug 3</div><div class="device-tag">smart strip plug</div></article>
+              <article class="device-card"><div class="device-name">Smart Strip</div><div class="device-tag">plug x 4</div></article>
+              <article class="device-card"><div class="device-name">USB Power</div><div class="device-tag">smart strip USB ports</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">Office</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Office Echo Dot</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">Shower</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Shower Speaker</div></article>
+            </div>
+          </section>
+
+          <section class="room-device-group">
+            <h3 class="device-heading">Other</h3>
+            <div class="device-list">
+              <article class="device-card"><div class="device-name">Spash TV</div></article>
+              <article class="device-card"><div class="device-name">Thermostat</div></article>
+            </div>
+          </section>
         </div>
       </details>
     </main>
@@ -524,93 +478,9 @@
       const panels = Array.from(document.querySelectorAll('details.panel'));
       const expandAll = document.getElementById('expandAll');
       const collapseAll = document.getElementById('collapseAll');
-      const searchInput = document.getElementById('deviceSearch');
-      const roomFilter = document.getElementById('roomFilter');
-      const typeFilter = document.getElementById('typeFilter');
-      const resetFilters = document.getElementById('resetFilters');
-      const resultCount = document.getElementById('resultCount');
-      const noResults = document.getElementById('noResults');
-      const cards = Array.from(document.querySelectorAll('.device-card'));
-      const sections = Array.from(document.querySelectorAll('.device-section'));
-
-      function uniqueValues(attribute) {
-        return Array.from(new Set(cards.map(card => card.dataset[attribute]).filter(Boolean)))
-          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-      }
-
-      function fillSelect(select, values) {
-        values.forEach(value => {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = value;
-          select.appendChild(option);
-        });
-      }
-
-      fillSelect(roomFilter, uniqueValues('room'));
-      fillSelect(typeFilter, uniqueValues('type'));
-
-      function updateSectionVisibility() {
-        sections.forEach(section => {
-          const visibleCards = Array.from(section.querySelectorAll('.device-card')).filter(card => !card.hidden);
-          const visibleHeadings = Array.from(section.querySelectorAll('h3.device-heading'));
-          const visibleLists = Array.from(section.querySelectorAll('.device-list'));
-
-          visibleLists.forEach(list => {
-            const hasVisibleCard = Array.from(list.querySelectorAll('.device-card')).some(card => !card.hidden);
-            list.hidden = !hasVisibleCard;
-          });
-
-          visibleHeadings.forEach(heading => {
-            const nextList = heading.nextElementSibling;
-            heading.hidden = !(nextList && !nextList.hidden);
-          });
-
-          section.hidden = visibleCards.length === 0;
-        });
-      }
-
-      function applyFilters() {
-        const search = searchInput.value.trim().toLowerCase();
-        const room = roomFilter.value;
-        const type = typeFilter.value;
-        let visible = 0;
-
-        cards.forEach(card => {
-          const haystack = [card.dataset.search, card.dataset.room, card.dataset.type, card.textContent].join(' ').toLowerCase();
-          const matchesSearch = !search || haystack.includes(search);
-          const matchesRoom = room === 'all' || card.dataset.room === room;
-          const matchesType = type === 'all' || card.dataset.type === type;
-          const show = matchesSearch && matchesRoom && matchesType;
-          card.hidden = !show;
-          if (show) visible += 1;
-        });
-
-        updateSectionVisibility();
-
-        noResults.style.display = visible ? 'none' : 'block';
-        resultCount.textContent = visible === cards.length
-          ? `Showing all ${cards.length} devices`
-          : `Showing ${visible} of ${cards.length} devices`;
-      }
-
-      [searchInput, roomFilter, typeFilter].forEach(control => {
-        control.addEventListener('input', applyFilters);
-        control.addEventListener('change', applyFilters);
-      });
-
-      resetFilters.addEventListener('click', () => {
-        searchInput.value = '';
-        roomFilter.value = 'all';
-        typeFilter.value = 'all';
-        applyFilters();
-        searchInput.focus({ preventScroll: true });
-      });
 
       expandAll.addEventListener('click', () => panels.forEach(panel => panel.open = true));
       collapseAll.addEventListener('click', () => panels.forEach(panel => panel.open = false));
-
-      applyFilters();
     })();
   </script>
 </body>
